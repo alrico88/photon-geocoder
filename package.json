@@ -28,6 +28,10 @@
     "axios": "^0.21.4",
     "qs": "^6.10.1"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/qs": "^6.9.7",
