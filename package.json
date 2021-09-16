@@ -1,6 +1,6 @@
 {
   "name": "photon-geocoder",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Methods to query photon.komoot.io API",
   "source": "src/index.ts",
   "main": "./dist/index.js",
