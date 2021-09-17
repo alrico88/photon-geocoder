@@ -2,6 +2,8 @@
 
 A simple wrapper for Photon API by [komoot](https://www.komoot.de/). Search for a place or perform a reverse lookup.
 
+This is an unofficial client, not affiliated with komoot in any way.
+
 ## Installation
 
 Using npm:
