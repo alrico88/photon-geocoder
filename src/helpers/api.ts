@@ -8,4 +8,4 @@ export interface PhotonQueryStrings {
   lon?: number,
 }
 
-export const baseURL = 'http://photon.komoot.io';
+export const baseURL = 'https://photon.komoot.io';
