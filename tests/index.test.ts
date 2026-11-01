@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vite-plus/test';
 import { reverseGeocode, search } from '../src/index';
 
 describe('Test geosearch', () => {
@@ -7,14 +8,14 @@ describe('Test geosearch', () => {
     expect(call.type).toBe('FeatureCollection');
   });
 
-  test('Limit should return a max of N numbers', async() => {
+  test('Limit should return a max of N numbers', async () => {
     const call = await search('Madrid', {
       limit: 1,
-      language: 'it'
+      language: 'fr',
     });
 
     expect(call.features.length).toBe(1);
-  })
+  });
 });
 
 describe('Test reverse geocoding', () => {
@@ -22,5 +23,5 @@ describe('Test reverse geocoding', () => {
     const call = await reverseGeocode(40.433143, -3.681369);
 
     expect(call.type).toBe('FeatureCollection');
-  })
-})
+  });
+});

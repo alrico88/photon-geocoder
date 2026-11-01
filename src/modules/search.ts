@@ -5,9 +5,9 @@ import { FeatureCollection, Point } from '../helpers/geojson';
 import { PhotonSupportedLanguage, PhotonQueryStrings, baseURL } from '../helpers/api';
 
 export interface SearchOptions {
-  priority?: [number, number],
-  language?: PhotonSupportedLanguage,
-  limit?: number,
+  priority?: [number, number];
+  language?: PhotonSupportedLanguage;
+  limit?: number;
 }
 
 /**

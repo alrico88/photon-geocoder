@@ -11,10 +11,7 @@ import { FeatureCollection, Point } from '../helpers/geojson';
  * @param {number} lon Longitude
  * @return {Promise<FeatureCollection<Point>>} The geocoded Point FeatureCollection
  */
-export async function reverseGeocode(
-  lat: number,
-  lon: number,
-): Promise<FeatureCollection<Point>> {
+export async function reverseGeocode(lat: number, lon: number): Promise<FeatureCollection<Point>> {
   const obj = {
     lat,
     lon,
