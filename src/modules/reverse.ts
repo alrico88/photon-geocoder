@@ -1,6 +1,4 @@
-import { stringify } from 'qs';
-import axios from 'axios';
-import { baseURL } from '../helpers/api';
+import { getJSON, getRootUrl, RequestOptions } from '../helpers/api';
 import { FeatureCollection, Point } from '../helpers/geojson';
 
 /**
@@ -9,17 +7,20 @@ import { FeatureCollection, Point } from '../helpers/geojson';
  * @export
  * @param {number} lat Latitude
  * @param {number} lon Longitude
+ * @param {RequestOptions} [options] Options to use for the request
  * @return {Promise<FeatureCollection<Point>>} The geocoded Point FeatureCollection
  */
-export async function reverseGeocode(lat: number, lon: number): Promise<FeatureCollection<Point>> {
-  const obj = {
-    lat,
-    lon,
-  };
+export async function reverseGeocode(
+  lat: number,
+  lon: number,
+  options?: RequestOptions,
+): Promise<FeatureCollection<Point>> {
+  const query = new URLSearchParams({
+    lat: String(lat),
+    lon: String(lon),
+  });
 
-  const url = `${baseURL}/reverse?${stringify(obj)}`;
+  const url = `${getRootUrl(options?.photonUrl)}/reverse?${query}`;
 
-  const response = await axios.get(url);
-
-  return response.data;
+  return getJSON(url, options?.signal);
 }

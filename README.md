@@ -4,90 +4,92 @@ A simple wrapper for Photon API by [komoot](https://www.komoot.de/). Search for 
 
 This is an unofficial client, not affiliated with komoot in any way.
 
+You can point to their hosted service or a custom instance url.
+
+Requests use native `fetch`, so it needs Node.js 22 or later, or a modern browser.
+
 ## Installation
 
-Using npm:
+```sh
+npm i photon-geocoder
+```
 
-`npm i photon-geocoder`
+## Usage
 
-Using yarn:
+```ts
+import { asSimpleArray, reverseGeocode, search } from 'photon-geocoder';
 
-`yarn add photon-geocoder`
+const results = await search('Madrid', { limit: 5, language: 'en' });
+const places = asSimpleArray(results);
 
-## Table of contents
+const place = await reverseGeocode(40.433143, -3.681369);
+```
 
-### Interfaces
+## Custom instance
 
-- [SearchOptions](interfaces/SearchOptions.md)
+Pass `photonUrl` in the options of a call:
 
-### Functions
+```ts
+import { search } from 'photon-geocoder';
 
-- [asSimpleArray](#assimplearray)
-- [reverseGeocode](#reversegeocode)
-- [search](#search)
+const results = await search('Madrid', { photonUrl: 'https://photon.example.com' });
+```
 
-## Functions
+Or create a client to use the same url in every call:
 
-### asSimpleArray
+```ts
+import { createPhoton } from 'photon-geocoder';
 
-▸ **asSimpleArray**(`featureCollection`): `Feature`<`Point`\>[]
+const { search, reverseGeocode } = createPhoton('https://photon.example.com');
 
-A helper function to extract data from the FeatureCollection result
+const results = await search('Madrid', { limit: 1 });
+const place = await reverseGeocode(40.433143, -3.681369);
+```
 
-**`export`**
+## Aborting a request
 
-#### Parameters
+Both `search` and `reverseGeocode` accept an `AbortSignal`:
 
-| Name                | Type                          | Description                                |
-| :------------------ | :---------------------------- | :----------------------------------------- |
-| `featureCollection` | `FeatureCollection`<`Point`\> | The FeatureCollection to extract data from |
+```ts
+import { reverseGeocode, search } from 'photon-geocoder';
 
-#### Returns
+const controller = new AbortController();
 
-`Feature`<`Point`\>[]
+const results = search('Madrid', { signal: controller.signal });
+const place = reverseGeocode(40.433143, -3.681369, { signal: AbortSignal.timeout(5000) });
 
----
+controller.abort();
+```
 
-### reverseGeocode
+An aborted request rejects with the signal's reason, an `AbortError` by default. A non-2xx response also rejects, with an `Error`.
 
-▸ **reverseGeocode**(`lat`, `lon`): `Promise`<`FeatureCollection`<`Point`\>\>
+## API
 
-Geocodes a latitude, longitude
+### search(searchTerm, options?)
 
-**`export`**
+Searches for a place. Returns a `Promise` with a GeoJSON `FeatureCollection` of points.
 
-#### Parameters
+| Option      | Type               | Description                               |
+| :---------- | :----------------- | :---------------------------------------- |
+| `limit`     | `number`           | Maximum number of results                 |
+| `language`  | `string`           | Language of the results                   |
+| `priority`  | `[number, number]` | `[lon, lat]` to prioritize results around |
+| `signal`    | `AbortSignal`      | Signal to abort the request               |
+| `photonUrl` | `string`           | Custom Photon instance URL                |
 
-| Name  | Type     | Description |
-| :---- | :------- | :---------- |
-| `lat` | `number` | Latitude    |
-| `lon` | `number` | Longitude   |
+### reverseGeocode(lat, lon, options?)
 
-#### Returns
+Geocodes a latitude and longitude. Returns a `Promise` with a GeoJSON `FeatureCollection` of points.
 
-`Promise`<`FeatureCollection`<`Point`\>\>
+| Option      | Type          | Description                 |
+| :---------- | :------------ | :-------------------------- |
+| `signal`    | `AbortSignal` | Signal to abort the request |
+| `photonUrl` | `string`      | Custom Photon instance URL  |
 
-The geocoded Point FeatureCollection
+### createPhoton(photonUrl?)
 
----
+Creates a client with `search` and `reverseGeocode` bound to a Photon instance. They take the same options, except `photonUrl`.
 
-### search
+### asSimpleArray(featureCollection)
 
-▸ **search**(`searchTerm`, `options?`): `Promise`<`FeatureCollection`<`Point`\>\>
-
-Searches for a place
-
-**`export`**
-
-#### Parameters
-
-| Name         | Type                                           | Description             |
-| :----------- | :--------------------------------------------- | :---------------------- |
-| `searchTerm` | `string`                                       | Search term to look for |
-| `options?`   | [`SearchOptions`](interfaces/SearchOptions.md) | -                       |
-
-#### Returns
-
-`Promise`<`FeatureCollection`<`Point`\>\>
-
-The FeatureCollection with the results
+Returns the features of a `FeatureCollection` as an array.
