@@ -1,6 +1,6 @@
 {
   "name": "photon-geocoder",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Methods to query photon.komoot.io API",
   "keywords": [
     "api",
