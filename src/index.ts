@@ -1,6 +1,6 @@
-import { Feature, FeatureCollection, Point } from './helpers/geojson';
+import type { Feature, FeatureCollection, Point } from './helpers/geojson';
 
-export { search, SearchOptions } from './modules/search';
+export { search, type SearchOptions } from './modules/search';
 export { reverseGeocode } from './modules/reverse';
 
 /**
