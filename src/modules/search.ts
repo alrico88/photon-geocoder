@@ -1,10 +1,8 @@
-import axios from 'axios';
 import is from '@sindresorhus/is';
-import { stringify } from 'qs';
 import { FeatureCollection, Point } from '../helpers/geojson';
-import { PhotonSupportedLanguage, PhotonQueryStrings, baseURL } from '../helpers/api';
+import { PhotonSupportedLanguage, RequestOptions, getJSON, getRootUrl } from '../helpers/api';
 
-export interface SearchOptions {
+export interface SearchOptions extends RequestOptions {
   priority?: [number, number];
   language?: PhotonSupportedLanguage;
   limit?: number;
@@ -22,30 +20,26 @@ export async function search(
   searchTerm: string,
   options?: SearchOptions,
 ): Promise<FeatureCollection<Point>> {
-  const query: PhotonQueryStrings = {
-    q: searchTerm,
-  };
+  const query = new URLSearchParams({ q: searchTerm });
 
   if (!is.undefined(options)) {
     if (!is.falsy(options.language)) {
-      query.lang = options.language;
+      query.set('lang', options.language);
     }
 
     if (!is.falsy(options.limit)) {
-      query.limit = options.limit;
+      query.set('limit', String(options.limit));
     }
 
     if (!is.falsy(options.priority) && is.array(options.priority)) {
       const [lon, lat] = options.priority;
 
-      query.lat = lat;
-      query.lon = lon;
+      query.set('lat', String(lat));
+      query.set('lon', String(lon));
     }
   }
 
-  const url = `${baseURL}/api/?${stringify(query)}`;
+  const url = `${getRootUrl(options?.photonUrl)}/api/?${query}`;
 
-  const response = await axios.get(url);
-
-  return response.data;
+  return getJSON(url, options?.signal);
 }

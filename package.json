@@ -35,14 +35,11 @@
     "prepublishOnly": "vp pack"
   },
   "dependencies": {
-    "@sindresorhus/is": "^8.1.0",
-    "axios": "^1.21.0",
-    "qs": "^6.17.1"
+    "@sindresorhus/is": "^8.1.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/qs": "^6.15.1",
     "publint": "^0.3.25",
     "typescript": "^7.0.2",
     "vite-plus": "catalog:"
